@@ -35,6 +35,6 @@ namespace ConsoleGameFramework
         /// <param name="xp"></param>
         /// <returns></returns>
         [DllImport("User32.dll")]
-        protected static extern Int16 CovertPosition(IntPtr hwnd, out XPoint xp);
+        protected static extern Int16 ConvertPosition(IntPtr hwnd, out XPoint xp);
     }
 }

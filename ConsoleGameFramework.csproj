@@ -48,6 +48,7 @@
     <Compile Include="XKeyboard.cs" />
     <Compile Include="XKeyboardEventArgs.cs" />
     <Compile Include="XMouse.cs" />
+    <Compile Include="XMouseEventArgs.cs" />
     <Compile Include="XRun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XGame.cs" />
