@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace ConsoleGameFramework
 {
@@ -12,6 +13,13 @@ namespace ConsoleGameFramework
     /// </summary>
     public abstract class XGame : IXGame
     {
+        #region API 函数
+
+        [DllImport("User32.dll")]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        #endregion
+
         #region XGame 类字段
 
         /// <summary>
@@ -41,6 +49,18 @@ namespace ConsoleGameFramework
 
         #endregion
 
+        #region 输入设备字段
+
+        /// 控制台句柄
+        private IntPtr m_hwnd = IntPtr.Zero;
+
+        /// 键盘输入设备
+        private XKeyboard m_dc_keyboard;
+        /// 鼠标输入设备
+        private XMouse m_dc_mouse;
+
+        #endregion
+
         #region 构造函数
 
         /// <summary>
@@ -49,6 +69,68 @@ namespace ConsoleGameFramework
         public XGame()
         {
             m_xGameOver = false;
+
+            m_hwnd = FindWindow(null, GetTitle());
+            m_dc_keyboard = new XKeyboard();
+            m_dc_mouse = new XMouse(m_hwnd);
+
+            // 订阅键盘事件
+            // m_dc_keyboard.addKeyDownEvent(GameKeyDown);
+            // m_dc_keyboard.addKeyUpEvent(GameKeyUp);
+            
+            // 订阅鼠标事件
+            // m_dc_mouse.AddMouseMoveEvent(GameMouseMove);
+            // m_dc_mouse.AddMouseAwayEvent(GameMouseAway);
+            // m_dc_mouse.AddMouseDownEvent(GameMouseDown);
+        }
+
+        #endregion
+
+        #region 游戏输入设备
+
+        /// 获取键盘设备
+        internal XKeyboard GetKeyboardDevice()
+        {
+            return m_dc_keyboard;
+        }
+
+        /// 获取鼠标设备
+        internal XMouse GetMouseDevice()
+        {
+            return m_dc_mouse;
+        }
+
+        #endregion
+
+        #region 游戏输入事件
+
+        /// 键盘按下虚拟函数
+        protected virtual void GameKeyDown(XKeyboardEventArgs args)
+        {
+            // 此处处理键盘按下事件
+        }
+        /// 键盘释放虚拟函数
+        protected virtual void GameKeyUp(XKeyboardEventArgs args)
+        {
+            // 此处处理键盘释放事件
+        }
+
+        /// 鼠标移动虚拟函数
+        protected virtual void GameMouseMove(XMouseEventArgs args)
+        {
+            // 此处处理鼠标移动事件
+        }
+        
+        /// 鼠标离开虚拟函数
+        protected virtual void GameMouseAway(XMouseEventArgs args)
+        {
+            // 此处处理鼠标离开事件
+        }
+
+        /// 鼠标按下虚拟函数
+        protected virtual void GameMouseDown(XMouseEventArgs args)
+        {
+            // 此处处理鼠标按下事件
         }
 
         #endregion
@@ -69,6 +151,15 @@ namespace ConsoleGameFramework
         /// 游戏结束
         /// </summary>
         protected abstract void GameExit();
+
+        /// 游戏输入
+        private void GameInput()
+        {
+            // 处理键盘事件
+            this.GetKeyboardDevice().KeyboardEventsHandler();
+            // 处理鼠标事件
+            this.GetMouseDevice().MouseEventsHandler();
+        }
 
         #endregion
 

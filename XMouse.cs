@@ -109,6 +109,30 @@ namespace ConsoleGameFramework
         }
 
         /// <summary>
+        /// 获取鼠标横坐标
+        /// </summary>
+        /// <returns></returns>
+        private Int32 GetMouseX()
+        {
+            return GetMousePoint().X;
+        }
+
+        /// <summary>
+        /// 获取鼠标纵坐标
+        /// </summary>
+        /// <returns></returns>
+        private Int32 GetMouseY()
+        {
+            return GetMousePoint().Y;
+        }
+
+        /// 是否离开工作区
+        private Boolean isLeave()
+        {
+            return m_leave;
+        }
+
+        /// <summary>
         /// 获取鼠标坐标
         /// </summary>
         /// <returns></returns>
@@ -139,22 +163,77 @@ namespace ConsoleGameFramework
             return m_oldPoint;
         }
 
-        /// <summary>
-        /// 获取鼠标横坐标
-        /// </summary>
-        /// <returns></returns>
-        private Int32 GetMouseX()
+        #endregion
+
+        #region 鼠标事件
+
+        /// 添加鼠标移动事件
+        public void AddMouseMoveEvent(XMouseHandler<XMouseEventArgs> func)
         {
-            return GetMousePoint().X;
+            m_mouseMove += func;
+        }
+        /// 添加鼠标离开事件
+        public void AddMouseAwayEvent(XMouseHandler<XMouseEventArgs> func)
+        {
+            m_mouseAway += func;
+        }
+        /// 添加鼠标按下事件
+        public void AddMouseDownEvent(XMouseHandler<XMouseEventArgs> func)
+        {
+            m_mouseDown += func;
         }
 
-        /// <summary>
-        /// 获取鼠标纵坐标
-        /// </summary>
-        /// <returns></returns>
-        private Int32 GetMouseY()
+        /// 响应鼠标移动事件
+        public void OnMouseMove(XMouseEventArgs args)
         {
-            return GetMousePoint().Y;
+            XMouseHandler<XMouseEventArgs> temp = m_mouseMove;
+            if(temp != null)
+            {
+                temp.Invoke(args);
+            }
+        }
+        /// 响应鼠标离开事件
+        public void OnMouseAway(XMouseEventArgs args)
+        {
+            XMouseHandler<XMouseEventArgs> temp = m_mouseAway;
+            if(temp != null)
+            {
+                temp.Invoke(args);
+            }
+        }
+        /// 响应鼠标按下事件
+        public void OnMouseDown(XMouseEventArgs args)
+        {
+            XMouseHandler<XMouseEventArgs> temp = m_mouseDown;
+            if(temp != null)
+            {
+                temp.Invoke(args);
+            }
+        }
+
+        /// 鼠标事件的处理
+        public void MouseEventHandler()
+        {
+            XMouseEventArgs args;
+            XPoint point = GetMousePoint();
+            XMouseButtons vKey = GetCurDownMouse();
+
+            if(!isLeave())
+            {
+                if(vKey != XMouseButtons.None)
+                {
+                    args = new XMouseEventArgs(point.X, point.Y, vKey);
+                    this.OnMouseDown(args); 
+                }
+
+                args = new XMouseEventArgs(point.X, point.Y, vKey);
+                this.OnMouseMove(args);
+            }
+            else
+            {
+                args = new XMouseEventArgs(-1, -1, true);
+                this.OnMouseAway(args);
+            }
         }
 
         #endregion
