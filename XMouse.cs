@@ -212,7 +212,7 @@ namespace ConsoleGameFramework
         }
 
         /// 鼠标事件的处理
-        public void MouseEventHandler()
+        public void MouseEventsHandler()
         {
             XMouseEventArgs args;
             XPoint point = GetMousePoint();

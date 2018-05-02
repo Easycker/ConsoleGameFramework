@@ -19,7 +19,7 @@ namespace ConsoleGameFramework
         static void Main(string[] args)
         {
             // XGameEngine.Run(new DemoGame()); 
-            XGameEngine.Run(new TestGame());
+            XGameEngine.Run(new TestGame2());
         }
     }
 

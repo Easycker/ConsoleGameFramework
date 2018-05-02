@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleGameFramework
 {
-    public class TestGame : XGame
+    public class TestGame1 : XGame
     {
         private Int32 m_ticks;
         private Int32 m_lasttime;
