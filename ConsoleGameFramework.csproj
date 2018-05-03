@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestGame.cs" />
+    <Compile Include="TestGame1.cs" />
+    <Compile Include="TestGame2.cs" />
     <Compile Include="XGraphics.cs" />
     <Compile Include="XInput.cs" />
     <Compile Include="XKeyboard.cs" />

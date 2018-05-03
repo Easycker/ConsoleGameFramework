@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +8,6 @@ namespace ConsoleGameFramework
 {
     public class TestGame2 : XGame
     {
-        private Int32 m_ticks;
-        private Int32 m_lasttime;
-
         private Boolean m_bkeydown = false;
 
         protected override void GameInit()
@@ -28,6 +25,7 @@ namespace ConsoleGameFramework
         protected override void GameLoop()
         {
             // 游戏逻辑
+
         }
         protected override void GameExit()
         {
@@ -37,13 +35,13 @@ namespace ConsoleGameFramework
 
         protected override void GameKeyDown(XKeyboardEventArgs args)
         {
-            if(!m_bkeydown)
+            if (!m_bkeydown)
             {
                 Console.WriteLine("按下键：" + args.GetKey());
                 m_bkeydown = true;
             }
 
-            if(args.GetKey() == XKeys.Escape)
+            if (args.GetKey() == XKeys.Escape)
             {
                 SetGameOver(true);
             }
