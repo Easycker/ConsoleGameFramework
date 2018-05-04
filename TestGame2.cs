@@ -25,7 +25,6 @@ namespace ConsoleGameFramework
         protected override void GameLoop()
         {
             // 游戏逻辑
-
         }
         protected override void GameExit()
         {
