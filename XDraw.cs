@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using static ConsoleGameFramework.XGraphics;
 
 namespace ConsoleGameFramework
 {
@@ -64,7 +65,7 @@ namespace ConsoleGameFramework
             // 截断字符串以适应绘制范围
             text = XText.CutText(text, textLen > rectLen ? rectLen : textLen);
             // 字符串换行
-            // text = XText.LineBreakText(text, rect.GetWidth());
+            text = XText.LineBreakText(text, rect.GetWidth());
             String[] texts = text.Split(Environment.NewLine.ToCharArray());
 
             Int32 count = 0;

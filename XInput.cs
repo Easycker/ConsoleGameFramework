@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+
+using static ConsoleGameFramework.XGraphics;
 
 namespace ConsoleGameFramework
 {
@@ -26,7 +27,7 @@ namespace ConsoleGameFramework
         /// <param name="xp"></param>
         /// <returns></returns>
         [DllImport("User32.dll")]
-        protected static extern Boolean GetCursorPosition(out XPoint xp);
+        protected static extern Boolean GetCursorPos(out XPoint xp);
 
         /// <summary>
         /// 将屏幕坐标转换为工作区坐标
@@ -35,6 +36,6 @@ namespace ConsoleGameFramework
         /// <param name="xp"></param>
         /// <returns></returns>
         [DllImport("User32.dll")]
-        protected static extern Int16 ConvertPosition(IntPtr hwnd, out XPoint xp);
+        protected static extern Int16 ScreenToClient(IntPtr hwnd, out XPoint xp);
     }
 }

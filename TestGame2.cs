@@ -22,6 +22,11 @@ namespace ConsoleGameFramework
             Console.WriteLine("游戏初始化成功！");
         }
 
+        protected override void GameDraw(XDraw draw)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void GameLoop()
         {
             // 游戏逻辑

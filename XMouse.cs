@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using static ConsoleGameFramework.XGraphics;
 
 namespace ConsoleGameFramework
 {
@@ -140,12 +141,12 @@ namespace ConsoleGameFramework
         {
             XPoint point;
 
-            if (GetCursorPosition(out point)) // 获取鼠标在屏幕上的位置
+            if (GetCursorPos(out point)) // 获取鼠标在屏幕上的位置
             {
                 if (m_hwnd != IntPtr.Zero)
                 {
                     // 将屏幕坐标转换为控制台工作区坐标
-                    ConvertPosition(m_hwnd, out point);
+                    ScreenToClient(m_hwnd, out point);
 
                     if ((point.X >= 0 && point.X <= MAX_X) &&
                         (point.Y >= 0 && point.Y <= MAX_Y))

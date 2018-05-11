@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using static ConsoleGameFramework.XGraphics;
 
 namespace ConsoleGameFramework
 {
@@ -211,6 +212,17 @@ namespace ConsoleGameFramework
             }
 
             rect.m_x += rect.m_x;
+        }
+
+        /// <summary>
+        /// 判断两个矩形是否相交
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        public Boolean CollisionWith(XRect rect)
+        {
+            return (m_x <= rect.GetX() && rect.GetX() <= (m_x + m_width) &&
+                    m_y <= rect.GetY() && rect.GetY() <= (m_y + m_height));
         }
 
         public override string ToString()

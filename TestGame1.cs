@@ -21,6 +21,11 @@ namespace ConsoleGameFramework
             m_lasttime = Environment.TickCount;
         }
 
+        protected override void GameDraw(XDraw draw)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void GameLoop()
         {
             if (m_ticks++ < 15)

@@ -67,6 +67,7 @@
     <Compile Include="XMatrix.cs" />
     <Compile Include="XMouse.cs" />
     <Compile Include="XMouseEventArgs.cs" />
+    <Compile Include="XPaintEventArgs.cs" />
     <Compile Include="XRect.cs" />
     <Compile Include="XRun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

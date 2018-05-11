@@ -47,6 +47,11 @@ namespace ConsoleGameFramework
         /// </summary>
         private Boolean m_xGameOver;
 
+        /// <summary>
+        /// 控制台绘图
+        /// </summary>
+        private XDraw m_draw;
+
         #endregion
 
         #region 输入设备字段
@@ -58,6 +63,69 @@ namespace ConsoleGameFramework
         private XKeyboard m_dc_keyboard;
         /// 鼠标输入设备
         private XMouse m_dc_mouse;
+
+        #endregion
+
+        #region 绘图相关函数
+
+        /// <summary>
+        /// 重绘事件委托
+        /// </summary>
+        /// <typeparam name="TEventArgs"></typeparam>
+        /// <param name="e"></param>
+        public delegate void PaintEventHandler<TEventArgs>(TEventArgs e);
+
+        /// <summary>
+        /// 重绘事件
+        /// </summary>
+        private event PaintEventHandler<XPaintEventArgs> m_paint;
+
+        /// <summary>
+        /// 获取需要绘制的控制台区域
+        /// </summary>
+        /// <returns></returns>
+        protected XRect GetClientRect()
+        {
+            return new XRect(Console.WindowLeft, Console.WindowTop, (Console.WindowWidth >>1)-1, Console.WindowHeight);
+        }
+
+        /// <summary>
+        /// 获取绘图对象
+        /// </summary>
+        /// <returns></returns>
+        protected XDraw GetDraw()
+        {
+            return this.m_draw;
+        }
+
+        /// <summary>
+        /// 响应重绘事件
+        /// </summary>
+        private void OnPaint(XPaintEventArgs args)
+        {
+            PaintEventHandler<XPaintEventArgs> temp = m_paint;
+            if (temp != null)
+                temp(args);
+        }
+
+        /// <summary>
+        /// 画面更新，需要重绘整个工作区
+        /// </summary>
+        protected void Update()
+        {
+            XPaintEventArgs args = new XPaintEventArgs(GetClientRect(), GetDraw());
+            this.OnPaint(args);
+        }
+
+        /// <summary>
+        /// 画面更新，需要重绘指定区域
+        /// </summary>
+        /// <param name="rect"></param>
+        protected void Update(XRect rect)
+        {
+            XPaintEventArgs args = new XPaintEventArgs(rect, GetDraw());
+            this.OnPaint(args);
+        }
 
         #endregion
 
@@ -73,15 +141,19 @@ namespace ConsoleGameFramework
             m_hwnd = FindWindow(null, GetTitle());
             m_dc_keyboard = new XKeyboard();
             m_dc_mouse = new XMouse(m_hwnd);
+            m_draw = new XDraw();
 
             // 订阅键盘事件
-            // m_dc_keyboard.addKeyDownEvent(GameKeyDown);
-            // m_dc_keyboard.addKeyUpEvent(GameKeyUp);
-            
+            m_dc_keyboard.addKeyDownEvent(GameKeyDown);
+            m_dc_keyboard.addKeyUpEvent(GameKeyUp);
+
             // 订阅鼠标事件
-            // m_dc_mouse.AddMouseMoveEvent(GameMouseMove);
-            // m_dc_mouse.AddMouseAwayEvent(GameMouseAway);
-            // m_dc_mouse.AddMouseDownEvent(GameMouseDown);
+            m_dc_mouse.AddMouseMoveEvent(GameMouseMove);
+            m_dc_mouse.AddMouseAwayEvent(GameMouseAway);
+            m_dc_mouse.AddMouseDownEvent(GameMouseDown);
+
+            // 游戏重绘事件
+            m_paint += new PaintEventHandler<XPaintEventArgs>(GameRedraw);
         }
 
         #endregion
@@ -105,30 +177,30 @@ namespace ConsoleGameFramework
         #region 游戏输入事件
 
         /// 键盘按下虚拟函数
-        protected virtual void GameKeyDown(XKeyboardEventArgs args)
+        protected virtual void GameKeyDown(XKeyboardEventArgs e)
         {
             // 此处处理键盘按下事件
         }
         /// 键盘释放虚拟函数
-        protected virtual void GameKeyUp(XKeyboardEventArgs args)
+        protected virtual void GameKeyUp(XKeyboardEventArgs e)
         {
             // 此处处理键盘释放事件
         }
 
         /// 鼠标移动虚拟函数
-        protected virtual void GameMouseMove(XMouseEventArgs args)
+        protected virtual void GameMouseMove(XMouseEventArgs e)
         {
             // 此处处理鼠标移动事件
         }
         
         /// 鼠标离开虚拟函数
-        protected virtual void GameMouseAway(XMouseEventArgs args)
+        protected virtual void GameMouseAway(XMouseEventArgs e)
         {
             // 此处处理鼠标离开事件
         }
 
         /// 鼠标按下虚拟函数
-        protected virtual void GameMouseDown(XMouseEventArgs args)
+        protected virtual void GameMouseDown(XMouseEventArgs e)
         {
             // 此处处理鼠标按下事件
         }
@@ -159,6 +231,23 @@ namespace ConsoleGameFramework
             this.GetKeyboardDevice().KeyboardEventsHandler();
             // 处理鼠标事件
             this.GetMouseDevice().MouseEventsHandler();
+        }
+
+        /// <summary>
+        /// 游戏渲染
+        /// </summary>
+        /// <param name="draw"></param>
+        protected abstract void GameDraw(XDraw draw);
+
+        /// <summary>
+        /// 游戏重绘
+        /// </summary>
+        /// <param name="args"></param>
+        protected virtual void GameRedraw(XPaintEventArgs args)
+        {
+            // 默认方法是使用背景色擦除指定区域
+            m_draw.SetDrawSymbol(XSymbol.DEFAULT);
+            m_draw.FillRect(args.GetClientRect(), Console.BackgroundColor);
         }
 
         #endregion
@@ -286,13 +375,17 @@ namespace ConsoleGameFramework
             {
                 startTime = Environment.TickCount; // 启动游戏计时
                 this.SetFPS();                     // 计算 FPS
+                this.GameInput();                  // 游戏输入
                 this.GameLoop();                   // 游戏主逻辑
+                this.GameDraw(m_draw);             // 游戏渲染
                 while (Environment.TickCount - startTime < this.m_updateRate)
                     this.Delay();                  // 保持一定的 FPS
             }
 
             this.GameExit(); // 退出游戏
             this.Close();    // 释放资源
+
+            Console.ReadLine();
         }
 
         #endregion
